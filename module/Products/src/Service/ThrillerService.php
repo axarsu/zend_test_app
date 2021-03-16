@@ -53,8 +53,6 @@ class ThrillerService extends ProductService
 
         $this->form->setData($request->getPost());
         if (!$this->form->isValid()) {
-            echo 2;
-            exit;
             return ['form' => $this->form];
         }
 
