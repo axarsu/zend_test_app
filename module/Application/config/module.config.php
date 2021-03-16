@@ -7,10 +7,10 @@
 
 namespace Application;
 
+use Products\Controller\ProductsController;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
 use Zend\ServiceManager\Factory\InvokableFactory;
-use Album\Controller\AlbumController;
 
 return [
     'router' => [
@@ -20,7 +20,7 @@ return [
                 'options' => [
                     'route' => '/',
                     'defaults' => [
-                        'controller' => AlbumController::class,
+                        'controller' => ProductsController::class,
                         'action' => 'index',
                     ],
                 ],

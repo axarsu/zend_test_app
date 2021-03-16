@@ -1,26 +1,19 @@
 <?php
 
-namespace Album\Controller;
+namespace Products\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
-use Album\Model\AlbumTable;
-use Album\Form\AlbumForm;
-use Album\Model\Album;
+use Products\Model\AlbumTable;
+use Products\Form\AlbumForm;
+use Products\Model\Album;
 
-class AlbumController extends AbstractActionController
+class BookController extends BaseController
 {
-    private $table;
-
-    public function __construct(AlbumTable $table)
-    {
-        $this->table = $table;
-    }
-
     public function indexAction()
     {
         return new ViewModel([
-            'albums' => $this->table->fetchAll(),
+            'books' => $this->service->fetchAllBooks(),
         ]);
     }
 
@@ -119,8 +112,8 @@ class AlbumController extends AbstractActionController
     {
         return [
             'factories' => [
-                Controller\AlbumController::class => function ($container) {
-                    return new Controller\AlbumController(
+                Controller\BookController::class => function ($container) {
+                    return new Controller\BookController(
                         $container->get(Model\AlbumTable::class)
                     );
                 },

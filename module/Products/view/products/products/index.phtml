@@ -1,0 +1,39 @@
+<?php
+// module/Album/view/album/album/index.phtml:
+
+$title = 'My product';
+$this->headTitle($title);
+?>
+<h1><?= $this->escapeHtml($title) ?></h1>
+<p>
+  <a href="<?= $this->url('album', ['action' => 'index']) ?>">Albums Section</a>
+</p>
+<table class="table">
+  <tr>
+    <th>Title</th>
+    <th>Artist</th>
+  </tr>
+    <?php foreach ($albums as $album) : ?>
+      <tr>
+        <td><?= $this->escapeHtml($album->title) ?></td>
+        <td><?= $this->escapeHtml($album->artist) ?></td>
+      </tr>
+    <?php endforeach; ?>
+</table>
+<p style="margin-top:40px;">
+  <a href="<?= $this->url('book', ['action' => 'index']) ?>">Books Section</a>
+</p>
+<table class="table">
+  <tr>
+    <th>Title</th>
+    <th>Author</th>
+    <th>ISBN</th>
+  </tr>
+    <?php foreach ($books as $book) : ?>
+      <tr>
+        <td><?= $this->escapeHtml($book->title) ?></td>
+        <td><?= $this->escapeHtml($book->author) ?></td>
+        <td><?= $this->escapeHtml($book->isbn) ?></td>
+      </tr>
+    <?php endforeach; ?>
+</table>
