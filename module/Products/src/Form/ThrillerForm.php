@@ -5,16 +5,17 @@ namespace Products\Form;
 use Zend\Filter\StringTrim;
 use Zend\Filter\StripTags;
 use Zend\Filter\ToInt;
-use Zend\Form\Form;
+use Zend\Validator\Digits;
 use Zend\Validator\StringLength;
 use Zend\Validator\GreaterThan;
+use Zend\Form\Form;
 
-class AlbumForm extends Form
+class ThrillerForm extends Form
 {
     public function __construct($name = null)
     {
         // We will ignore the name provided to the constructor
-        parent::__construct('album');
+        parent::__construct('thriller');
 
         $this->add([
             'name' => 'id',
@@ -27,6 +28,11 @@ class AlbumForm extends Form
         ]);
 
         $this->add([
+            'name' => 'book_id',
+            'type' => 'hidden',
+        ]);
+
+        $this->add([
             'name' => 'title',
             'type' => 'text',
             'options' => [
@@ -35,10 +41,26 @@ class AlbumForm extends Form
         ]);
 
         $this->add([
-            'name' => 'artist_id',
+            'name' => 'author_id',
             'type' => 'select',
             'options' => [
-                'label' => 'Artist',
+                'label' => 'Author',
+            ],
+        ]);
+
+        $this->add([
+            'name' => 'isbn',
+            'type' => 'text',
+            'options' => [
+                'label' => 'ISBN',
+            ],
+        ]);
+
+        $this->add([
+            'name' => 'excitement_factor',
+            'type' => 'text',
+            'options' => [
+                'label' => 'Excitement Factor',
             ],
         ]);
 
@@ -75,7 +97,15 @@ class AlbumForm extends Form
         ]);
 
         $inputFilter->add([
-            'name' => 'artist_id',
+            'name' => 'book_id',
+            'required' => true,
+            'filters' => [
+                ['name' => ToInt::class],
+            ],
+        ]);
+
+        $inputFilter->add([
+            'name' => 'author_id',
             'required' => true,
             'filters' => [
                 ['name' => ToInt::class],
@@ -85,7 +115,7 @@ class AlbumForm extends Form
                     'name' => GreaterThan::class,
                     'options' => [
                         'min' => 0,
-                        'message' => 'Select an Artist, please!',
+                        'message' => 'Select an Author, please!',
                     ],
                 ],
             ],
@@ -106,6 +136,50 @@ class AlbumForm extends Form
                         'min' => 1,
                         'max' => 100,
                     ],
+                ],
+            ],
+        ]);
+
+        $inputFilter->add([
+            'name' => 'isbn',
+            'required' => true,
+            'filters' => [
+                ['name' => StripTags::class],
+                ['name' => StringTrim::class],
+            ],
+            'validators' => [
+                [
+                    'name' => StringLength::class,
+                    'options' => [
+                        'encoding' => 'UTF-8',
+                        'min' => 10,
+                        'max' => 10,
+                    ],
+                ],
+                [
+                    'name' => Digits::class,
+                ],
+            ],
+        ]);
+
+        $inputFilter->add([
+            'name' => 'excitement_factor',
+            'required' => true,
+            'filters' => [
+                ['name' => StripTags::class],
+                ['name' => StringTrim::class],
+            ],
+            'validators' => [
+                [
+                    'name' => StringLength::class,
+                    'options' => [
+                        'encoding' => 'UTF-8',
+                        'min' => 1,
+                        'max' => 2,
+                    ],
+                ],
+                [
+                    'name' => Digits::class,
                 ],
             ],
         ]);

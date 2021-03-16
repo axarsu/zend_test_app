@@ -4,12 +4,12 @@ namespace Products\Controller;
 
 use Zend\View\Model\ViewModel;
 
-class BookController extends BaseController
+class ThrillerController extends BaseController
 {
     public function indexAction()
     {
         return new ViewModel([
-            'books' => $this->service->fetchAllBooks(),
+            'thrillers' => $this->service->fetchAllThrillers(),
         ]);
     }
 
@@ -18,7 +18,7 @@ class BookController extends BaseController
         $request = $this->getRequest();
         $result = $this->service->add($request);
         if ($result === true) {
-            return $this->redirect()->toRoute('book');
+            return $this->redirect()->toRoute('thriller');
         } else {
             return $result;
         }
@@ -28,15 +28,15 @@ class BookController extends BaseController
     {
         $id = (int)$this->params()->fromRoute('id', 0);
         if (0 === $id) {
-            return $this->redirect()->toRoute('book');
+            return $this->redirect()->toRoute('thriller');
         }
 
         $request = $this->getRequest();
         $result = $this->service->edit($id, $request);
         if ($result === true) {
-            return $this->redirect()->toRoute('book');
+            return $this->redirect()->toRoute('thriller');
         } elseif ($result === false) {
-            return $this->redirect()->toRoute('book');
+            return $this->redirect()->toRoute('thriller');
         } else {
             return $result;
         }
@@ -46,7 +46,7 @@ class BookController extends BaseController
     {
         $id = (int)$this->params()->fromRoute('id', 0);
         if (0 === $id) {
-            return $this->redirect()->toRoute('book');
+            return $this->redirect()->toRoute('thriller');
         }
 
         $request = $this->getRequest();
@@ -55,16 +55,16 @@ class BookController extends BaseController
 
             if ($del == 'Yes') {
                 $id = (int)$request->getPost('id');
-                $this->service->deleteBook($id);
+                $this->service->deleteThriller($id);
             }
 
             // Redirect to list of albums
-            return $this->redirect()->toRoute('book');
+            return $this->redirect()->toRoute('thriller');
         }
 
         return [
             'id' => $id,
-            'book' => $this->service->getBook($id),
+            'thriller' => $this->service->getThriller($id),
         ];
     }
 }

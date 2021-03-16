@@ -2,13 +2,13 @@
 
 namespace Products\Service;
 
-use Products\Form\BookForm;
-use Products\Model\Book;
+use Products\Form\ThrillerForm;
+use Products\Model\Thriller;
 use RuntimeException;
 use Zend\Db\Sql\Sql;
 use Zend\Stdlib\RequestInterface as Request;
 
-class BookService extends ProductService
+class ThrillerService extends ProductService
 {
     protected $form;
 
@@ -16,7 +16,7 @@ class BookService extends ProductService
     {
         parent::__construct($sql);
 
-        $this->form = new BookForm();
+        $this->form = new ThrillerForm();
 
         $authors = array_merge(['0' => ''], $this->fetchAllAuthors());
         $this->form->get('author_id')->setValueOptions($authors);
@@ -41,7 +41,7 @@ class BookService extends ProductService
 
     /**
      * @param Request $request
-     * @return BookForm[]|bool
+     * @return ThrillerForm[]|bool
      */
     public function add($request)
     {
@@ -51,24 +51,25 @@ class BookService extends ProductService
             return ['form' => $this->form];
         }
 
-        $book = new Book();
         $this->form->setData($request->getPost());
-
         if (!$this->form->isValid()) {
+            echo 2;
+            exit;
             return ['form' => $this->form];
         }
 
-        $book->exchangeArray($this->form->getData());
+        $thriller = new Thriller();
+        $thriller->exchangeArray($this->form->getData());
 
-        return $this->saveBook($book);
+        return $this->saveThriller($thriller);
     }
 
-    public function saveBook(Book $book)
+    public function saveThriller(Thriller $thriller)
     {
         $this->adapter->getDriver()->getConnection()->beginTransaction();
 
         try {
-            $product_id = (int)$book->product_id;
+            $product_id = (int)$thriller->product_id;
             if ($product_id === 0) {
                 $insert = $this->sql->insert('product')
                     ->columns(['id']);
@@ -79,20 +80,41 @@ class BookService extends ProductService
 
             $data = [
                 'product_id' => $product_id,
-                'author_id' => $book->author_id,
-                'title' => $book->title,
-                'isbn' => $book->isbn,
+                'author_id' => $thriller->author_id,
+                'title' => $thriller->title,
+                'isbn' => $thriller->isbn,
             ];
 
-            $id = (int)$book->id;
-            if ($id === 0) {
+            $book_id = (int)$thriller->book_id;
+            if ($book_id === 0) {
                 $insert = $this->sql->insert('book')
                     ->columns(['product_id', 'author_id', 'title', 'isbn'])
                     ->values($data);
                 $sql_string = $this->sql->buildSqlString($insert);
-                $this->adapter->query($sql_string, $this->adapter::QUERY_MODE_EXECUTE);
+                $query = $this->adapter->query($sql_string, $this->adapter::QUERY_MODE_EXECUTE);
+                $book_id = $query->getGeneratedValue();
             } else {
                 $update = $this->sql->update('book')
+                    ->set($data)
+                    ->where('id = ' . $book_id);
+                $sql_string = $this->sql->buildSqlString($update);
+                $this->adapter->query($sql_string, $this->adapter::QUERY_MODE_EXECUTE);
+            }
+
+            $data = [
+                'book_id' => $book_id,
+                'excitement_factor' => $thriller->excitement_factor,
+            ];
+
+            $id = (int)$thriller->id;
+            if ($id === 0) {
+                $insert = $this->sql->insert('thriller')
+                    ->columns(['book_id', 'excitement_factor',])
+                    ->values($data);
+                $sql_string = $this->sql->buildSqlString($insert);
+                $this->adapter->query($sql_string, $this->adapter::QUERY_MODE_EXECUTE);
+            } else {
+                $update = $this->sql->update('thriller')
                     ->set($data)
                     ->where('id = ' . $id);
                 $sql_string = $this->sql->buildSqlString($update);
@@ -103,6 +125,8 @@ class BookService extends ProductService
 
             return true;
         } catch (RuntimeException $e) {
+            var_dump($e);
+            exit;
             $this->adapter->getDriver()->getConnection()->rollback();
 
             return [
@@ -118,12 +142,12 @@ class BookService extends ProductService
         // an exception if the album is not found, which should result
         // in redirecting to the landing page.
         try {
-            $book = $this->getBook($id);
+            $thriller = $this->getThriller($id);
         } catch (\Exception $e) {
             return false;
         }
 
-        $this->form->bind($book);
+        $this->form->bind($thriller);
         $this->form->get('submit')->setAttribute('value', 'Edit');
 
         $viewData = [
@@ -141,18 +165,28 @@ class BookService extends ProductService
             return $viewData;
         }
 
-        return $this->saveBook($book);
+        return $this->saveThriller($thriller);
     }
 
-    public function getBook($id)
+    public function getThriller($id)
     {
         $id = (int)$id;
 
         $select = $this->sql->select()
-            ->columns(['*', 'author.name as author'], false)
-            ->from('book')
-            ->join('author', 'author.id = book.author_id')
-            ->where('book.id = ' . $id);
+            ->columns([
+                'thriller.id as id',
+                'thriller.excitement_factor as excitement_factor',
+                'thriller.book_id as book_id',
+                'book.author_id as author_id',
+                'book.title as title',
+                'book.isbn as isbn',
+                'book.product_id as product_id',
+                'author.name as author',
+            ], false)
+            ->from('thriller')
+            ->join('book', 'book.id = thriller.book_id', [])
+            ->join('author', 'author.id = book.author_id', [])
+            ->where('thriller.id = ' . $id);
 
         $selectString = $this->sql->buildSqlString($select);
         $rows = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);
@@ -165,25 +199,41 @@ class BookService extends ProductService
             ));
         }
 
-        $book = new Book();
+        $book = new Thriller();
         $book->exchangeArray($row);
 
         return $book;
     }
 
-    public function deleteBook($id)
+    public function deleteThriller($id)
     {
         try {
-            $book = $this->getBook($id);
+            $thriller = $this->getThriller($id);
         } catch (\Exception $e) {
             return false;
         }
 
         $delete = $this->sql->delete()
             ->from('product')
-            ->where('id = ' . $book->product_id);
+            ->where('id = ' . $thriller->product_id);
 
         $delete_string = $this->sql->buildSqlString($delete);
         $this->adapter->query($delete_string, $this->adapter::QUERY_MODE_EXECUTE);
+    }
+
+    public function fetchAllThrillers()
+    {
+        $select = $this->sql->select()
+            ->columns(['thriller.id as ID', 'thriller.excitement_factor as excitement_factor'], false)
+            ->from('thriller')
+            ->join('book', 'book.id = thriller.book_id')
+            ->join('author', 'author.id = book.author_id')
+            ->order('thriller.id');
+
+        $selectString = $this->sql->buildSqlString($select);
+
+        $rows = $this->adapter->query($selectString, $this->adapter::QUERY_MODE_EXECUTE);
+
+        return $rows;
     }
 }

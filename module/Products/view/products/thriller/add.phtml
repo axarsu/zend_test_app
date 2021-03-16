@@ -1,5 +1,5 @@
 <?php
-$title = 'Add new book';
+$title = 'Add new thriller';
 $this->headTitle($title);
 ?>
   <h1><?= $this->escapeHtml($title) ?></h1>
@@ -16,10 +16,14 @@ $isbn = $form->get('isbn');
 $isbn->setAttribute('class', 'form-control');
 $isbn->setAttribute('placeholder', 'Book ISBN');
 
+$exc = $form->get('excitement_factor');
+$exc->setAttribute('class', 'form-control');
+$exc->setAttribute('placeholder', 'Excitement Factor');
+
 $submit = $form->get('submit');
 $submit->setAttribute('class', 'btn btn-primary');
 
-$form->setAttribute('action', $this->url('book', ['action' => 'add']));
+$form->setAttribute('action', $this->url('thriller', ['action' => 'add']));
 $form->prepare();
 
 echo $this->form()->openTag($form);
@@ -41,8 +45,14 @@ echo $this->form()->openTag($form);
       <?= $this->formElement($isbn) ?>
       <?= $this->formElementErrors()->render($isbn, ['class' => 'help-block']) ?>
   </div>
+  <div class="form-group">
+      <?= $this->formLabel($exc) ?>
+      <?= $this->formElement($exc) ?>
+      <?= $this->formElementErrors()->render($exc, ['class' => 'help-block']) ?>
+  </div>
 <?php
 echo $this->formSubmit($submit);
 echo $this->formHidden($form->get('id'));
 echo $this->formHidden($form->get('product_id'));
+echo $this->formHidden($form->get('book_id'));
 echo $this->form()->closeTag();

@@ -1,0 +1,31 @@
+<?php
+// module/Album/view/album/album/index.phtml:
+
+$title = 'My thrillers';
+$this->headTitle($title);
+?>
+<h1><?= $this->escapeHtml($title) ?></h1>
+<p>
+  <a href="<?= $this->url('thriller', ['action' => 'add']) ?>">Add new thriller</a>
+</p>
+<table class="table">
+  <tr>
+    <th>Title</th>
+    <th>Author</th>
+    <th>ISBN</th>
+    <th>Excitement Factor</th>
+    <th>&nbsp;</th>
+  </tr>
+    <?php foreach ($thrillers as $thriller) : ?>
+      <tr>
+        <td><?= $this->escapeHtml($thriller->title) ?></td>
+        <td><?= $this->escapeHtml($thriller->name) ?></td>
+        <td><?= $this->escapeHtml($thriller->isbn) ?></td>
+        <td><?= $this->escapeHtml($thriller->excitement_factor) ?>%</td>
+        <td>
+          <a href="<?= $this->url('thriller', ['action' => 'edit', 'id' => $thriller->ID]) ?>">Edit</a>
+          <a href="<?= $this->url('thriller', ['action' => 'delete', 'id' => $thriller->ID]) ?>">Delete</a>
+        </td>
+      </tr>
+    <?php endforeach; ?>
+</table>

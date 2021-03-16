@@ -5,6 +5,7 @@ namespace Products;
 use Products\Service\ProductService;
 use Products\Service\AlbumService;
 use Products\Service\BookService;
+use Products\Service\ThrillerService;
 use Zend\Db\Adapter\AdapterInterface;
 use Zend\Db\Sql\Sql;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
@@ -35,6 +36,11 @@ class Module implements ConfigProviderInterface
                     $sql = new Sql($dbAdapter);
                     return new BookService($sql);
                 },
+                Service\ThrillerService::class => function ($container) {
+                    $dbAdapter = $container->get(AdapterInterface::class);
+                    $sql = new Sql($dbAdapter);
+                    return new ThrillerService($sql);
+                },
             ],
         ];
     }
@@ -56,6 +62,11 @@ class Module implements ConfigProviderInterface
                 Controller\ProductsController::class => function ($container) {
                     return new Controller\ProductsController(
                         $container->get(Service\ProductService::class)
+                    );
+                },
+                Controller\ThrillerController::class => function ($container) {
+                    return new Controller\ThrillerController(
+                        $container->get(Service\ThrillerService::class)
                     );
                 },
             ],

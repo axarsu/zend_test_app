@@ -172,9 +172,15 @@ class AlbumService extends ProductService
 
     public function deleteAlbum($id)
     {
+        try {
+            $album = $this->getAlbum($id);
+        } catch (\Exception $e) {
+            return false;
+        }
+
         $delete = $this->sql->delete()
-            ->from('album')
-            ->where('id = ' . $id);
+            ->from('product')
+            ->where('id = ' . $album->product_id);
 
         $delete_string = $this->sql->buildSqlString($delete);
         $this->adapter->query($delete_string, $this->adapter::QUERY_MODE_EXECUTE);

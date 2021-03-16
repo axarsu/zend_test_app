@@ -1,23 +1,25 @@
 <?php
-// module/Album/view/album/album/edit.phtml:
-
-$title = 'Edit album';
+$title = 'Edit book';
 $this->headTitle($title);
 ?>
   <h1><?= $this->escapeHtml($title) ?></h1>
 <?php
-$album = $form->get('title');
-$album->setAttribute('class', 'form-control');
-$album->setAttribute('placeholder', 'Album title');
+$book = $form->get('title');
+$book->setAttribute('class', 'form-control');
+$book->setAttribute('placeholder', 'Book title');
 
-$artist = $form->get('artist');
-$artist->setAttribute('class', 'form-control');
-$artist->setAttribute('placeholder', 'Artist');
+// This provides a default CSS class and placeholder text for the artist element:
+$author = $form->get('author_id');
+$author->setAttribute('class', 'form-control');
+
+$isbn = $form->get('isbn');
+$isbn->setAttribute('class', 'form-control');
+$isbn->setAttribute('placeholder', 'Book ISBN');
 
 $submit = $form->get('submit');
 $submit->setAttribute('class', 'btn btn-primary');
 
-$form->setAttribute('action', $this->url('album', [
+$form->setAttribute('action', $this->url('book', [
     'action' => 'edit',
     'id' => $id,
 ]));
@@ -25,17 +27,25 @@ $form->prepare();
 
 echo $this->form()->openTag($form);
 ?>
+<?php // Wrap the elements in divs marked as form groups, and render the
+// label, element, and errors separately within ?>
   <div class="form-group">
-      <?= $this->formLabel($album) ?>
-      <?= $this->formElement($album) ?>
-      <?= $this->formElementErrors()->render($album, ['class' => 'help-block']) ?>
+      <?= $this->formLabel($book) ?>
+      <?= $this->formElement($book) ?>
+      <?= $this->formElementErrors()->render($book, ['class' => 'help-block']) ?>
   </div>
   <div class="form-group">
-      <?= $this->formLabel($artist) ?>
-      <?= $this->formElement($artist) ?>
-      <?= $this->formElementErrors()->render($artist, ['class' => 'help-block']) ?>
+      <?= $this->formLabel($author) ?>
+      <?= $this->formElement($author) ?>
+      <?= $this->formElementErrors()->render($author, ['class' => 'help-block']) ?>
+  </div>
+  <div class="form-group">
+      <?= $this->formLabel($isbn) ?>
+      <?= $this->formElement($isbn) ?>
+      <?= $this->formElementErrors()->render($isbn, ['class' => 'help-block']) ?>
   </div>
 <?php
 echo $this->formSubmit($submit);
 echo $this->formHidden($form->get('id'));
+echo $this->formHidden($form->get('product_id'));
 echo $this->form()->closeTag();

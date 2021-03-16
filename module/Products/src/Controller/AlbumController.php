@@ -3,7 +3,6 @@
 namespace Products\Controller;
 
 use Zend\View\Model\ViewModel;
-use Products\Model\AlbumTable;
 
 class AlbumController extends BaseController
 {

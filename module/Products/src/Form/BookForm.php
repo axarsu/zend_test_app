@@ -6,15 +6,16 @@ use Zend\Filter\StringTrim;
 use Zend\Filter\StripTags;
 use Zend\Filter\ToInt;
 use Zend\Form\Form;
+use Zend\Validator\Digits;
 use Zend\Validator\StringLength;
 use Zend\Validator\GreaterThan;
 
-class AlbumForm extends Form
+class BookForm extends Form
 {
     public function __construct($name = null)
     {
         // We will ignore the name provided to the constructor
-        parent::__construct('album');
+        parent::__construct('book');
 
         $this->add([
             'name' => 'id',
@@ -35,10 +36,18 @@ class AlbumForm extends Form
         ]);
 
         $this->add([
-            'name' => 'artist_id',
+            'name' => 'author_id',
             'type' => 'select',
             'options' => [
-                'label' => 'Artist',
+                'label' => 'Author',
+            ],
+        ]);
+
+        $this->add([
+            'name' => 'isbn',
+            'type' => 'text',
+            'options' => [
+                'label' => 'ISBN',
             ],
         ]);
 
@@ -75,7 +84,7 @@ class AlbumForm extends Form
         ]);
 
         $inputFilter->add([
-            'name' => 'artist_id',
+            'name' => 'author_id',
             'required' => true,
             'filters' => [
                 ['name' => ToInt::class],
@@ -85,7 +94,7 @@ class AlbumForm extends Form
                     'name' => GreaterThan::class,
                     'options' => [
                         'min' => 0,
-                        'message' => 'Select an Artist, please!',
+                        'message' => 'Select an Author, please!',
                     ],
                 ],
             ],
@@ -106,6 +115,28 @@ class AlbumForm extends Form
                         'min' => 1,
                         'max' => 100,
                     ],
+                ],
+            ],
+        ]);
+
+        $inputFilter->add([
+            'name' => 'isbn',
+            'required' => true,
+            'filters' => [
+                ['name' => StripTags::class],
+                ['name' => StringTrim::class],
+            ],
+            'validators' => [
+                [
+                    'name' => StringLength::class,
+                    'options' => [
+                        'encoding' => 'UTF-8',
+                        'min' => 10,
+                        'max' => 10,
+                    ],
+                ],
+                [
+                    'name' => Digits::class,
                 ],
             ],
         ]);

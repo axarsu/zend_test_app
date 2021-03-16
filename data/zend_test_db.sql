@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Mar 16, 2021 at 05:19 PM
+-- Generation Time: Mar 16, 2021 at 07:53 PM
 -- Server version: 10.5.9-MariaDB-1:10.5.9+maria~focal
 -- PHP Version: 7.4.3
 
@@ -28,7 +28,7 @@ SET time_zone = "+00:00";
 -- Table structure for table `album`
 --
 -- Creation: Mar 13, 2021 at 10:48 PM
--- Last update: Mar 16, 2021 at 03:52 AM
+-- Last update: Mar 16, 2021 at 03:41 PM
 --
 
 DROP TABLE IF EXISTS `album`;
@@ -44,14 +44,11 @@ CREATE TABLE `album` (
 --
 
 INSERT INTO `album` (`id`, `product_id`, `artist_id`, `title`) VALUES
+(1, 6, 1, 'In My Dreams'),
 (2, 7, 2, '21'),
 (3, 8, 3, 'Wrecking Ball (Deluxe)'),
 (4, 9, 4, 'Born To Die'),
-(5, 10, 5, 'Making Mirrors'),
-(8, 24, 3, 'sdfdsfdsf'),
-(9, 25, 2, 'hallo'),
-(10, 26, 4, 'testt'),
-(11, 27, 3, 'tetststs');
+(5, 10, 5, 'Making Mirrors');
 
 -- --------------------------------------------------------
 
@@ -85,7 +82,7 @@ INSERT INTO `artist` (`id`, `name`) VALUES
 -- Table structure for table `author`
 --
 -- Creation: Mar 13, 2021 at 10:31 PM
--- Last update: Mar 13, 2021 at 10:38 PM
+-- Last update: Mar 16, 2021 at 03:45 PM
 --
 
 DROP TABLE IF EXISTS `author`;
@@ -101,8 +98,13 @@ CREATE TABLE `author` (
 INSERT INTO `author` (`id`, `name`) VALUES
 (1, 'Dana Perino'),
 (4, 'Dav Pilkey'),
+(6, 'Horace G. Feliu'),
+(8, 'Jack Arbor'),
 (5, 'Marilyn Sadler'),
+(9, 'Matt McCormick'),
 (3, 'Sister Souljah'),
+(7, 'Steven Pressfield'),
+(10, 'Tarryn Fisher'),
 (2, 'Walter Isaacson');
 
 -- --------------------------------------------------------
@@ -111,6 +113,7 @@ INSERT INTO `author` (`id`, `name`) VALUES
 -- Table structure for table `book`
 --
 -- Creation: Mar 13, 2021 at 10:41 PM
+-- Last update: Mar 16, 2021 at 03:50 PM
 --
 
 DROP TABLE IF EXISTS `book`;
@@ -131,7 +134,12 @@ INSERT INTO `book` (`id`, `product_id`, `author_id`, `title`, `isbn`) VALUES
 (2, 2, 2, 'The Code Breaker: Jennifer Doudna, Gene Editing, and the Future of the Human Race', '1982115858'),
 (3, 3, 3, 'Life After Death', '1982139137'),
 (4, 4, 4, 'Dog Man: Mothering Heights', '1338680455'),
-(5, 5, 5, 'It\'s Not Easy Being a Bunny', '0394861027');
+(5, 5, 5, 'It\'s Not Easy Being a Bunny', '0394861027'),
+(6, 28, 6, 'The UNREVEALED', '8976576432'),
+(7, 29, 7, 'A Man at Arms', '0393540979'),
+(8, 30, 8, 'The Russian Assassin: A Max Austin Thriller', '1232425324'),
+(9, 31, 9, 'The Prototype', '6543623423'),
+(10, 32, 10, 'The Wrong Family', '6345347643');
 
 -- --------------------------------------------------------
 
@@ -139,7 +147,7 @@ INSERT INTO `book` (`id`, `product_id`, `author_id`, `title`, `isbn`) VALUES
 -- Table structure for table `product`
 --
 -- Creation: Mar 13, 2021 at 10:28 PM
--- Last update: Mar 16, 2021 at 03:36 AM
+-- Last update: Mar 16, 2021 at 03:46 PM
 --
 
 DROP TABLE IF EXISTS `product`;
@@ -162,10 +170,11 @@ INSERT INTO `product` (`id`) VALUES
 (8),
 (9),
 (10),
-(24),
-(25),
-(26),
-(27);
+(28),
+(29),
+(30),
+(31),
+(32);
 
 -- --------------------------------------------------------
 
@@ -173,6 +182,7 @@ INSERT INTO `product` (`id`) VALUES
 -- Table structure for table `thriller`
 --
 -- Creation: Mar 13, 2021 at 10:48 PM
+-- Last update: Mar 16, 2021 at 03:51 PM
 --
 
 DROP TABLE IF EXISTS `thriller`;
@@ -181,6 +191,17 @@ CREATE TABLE `thriller` (
   `book_id` int(11) NOT NULL,
   `excitement_factor` tinyint(4) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `thriller`
+--
+
+INSERT INTO `thriller` (`id`, `book_id`, `excitement_factor`) VALUES
+(1, 6, 67),
+(2, 7, 35),
+(3, 8, 79),
+(4, 9, 64),
+(5, 10, 84);
 
 --
 -- Indexes for dumped tables
@@ -241,7 +262,7 @@ ALTER TABLE `thriller`
 -- AUTO_INCREMENT for table `album`
 --
 ALTER TABLE `album`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `artist`
@@ -253,25 +274,25 @@ ALTER TABLE `artist`
 -- AUTO_INCREMENT for table `author`
 --
 ALTER TABLE `author`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `book`
 --
 ALTER TABLE `book`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT for table `thriller`
 --
 ALTER TABLE `thriller`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Constraints for dumped tables

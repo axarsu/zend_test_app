@@ -9,6 +9,7 @@ class Book extends Product
     public $author_id;
     public $title;
     public $isbn;
+    public $author;
 
     public function exchangeArray(array $data)
     {
@@ -17,6 +18,7 @@ class Book extends Product
         $this->author_id = !empty($data['author_id']) ? $data['author_id'] : null;
         $this->title = !empty($data['title']) ? $data['title'] : null;
         $this->isbn = !empty($data['isbn']) ? $data['isbn'] : null;
+        $this->author = !empty($data['author']) ? $data['author'] : null;
     }
 
     public function getArrayCopy()
@@ -27,6 +29,7 @@ class Book extends Product
             'author_id' => $this->author_id,
             'title' => $this->title,
             'isbn' => $this->isbn,
+            'author' => $this->author,
         ];
     }
 
